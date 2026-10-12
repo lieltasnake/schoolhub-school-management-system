@@ -1,0 +1,47 @@
+*.log
+.DS_Store
+.env
+.env.backup
+.env.production
+.phpactor.json
+.phpunit.result.cache
+/.codex
+/.cursor/
+/.idea
+/.nova
+/.phpunit.cache
+/.vscode
+/.zed
+/auth.json
+/node_modules
+/public/build
+/public/fonts-manifest.dev.json
+/public/hot
+/public/storage
+/storage/*.key
+/storage/pail
+/vendor
+_ide_helper.php
+Homestead.json
+Homestead.yaml
+Thumbs.db
+
+# Local environment and secrets
+.env.*
+!.env.example
+auth.json
+
+# Dependencies and generated assets
+/vendor/
+/node_modules/
+/public/build/
+/public/hot
+
+# Local database backups and dumps
+*.sql
+*.sql.gz
+*.dump
+
+# Local uploaded files and logs
+/storage/app/
+storage/logs/
