@@ -24,8 +24,8 @@
                 <span>Total Students</span>
                 <span class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M3.5 20v-1.5a5.5 5.5 0 0 1 11 0V20m2-9.5a3.5 3.5 0 0 0 0-6.8M18 14a4 4 0 0 1 2.5 3.7V20"/></svg></span>
             </div>
-            <strong>{{ $studentCount ?? '—' }}</strong>
-            <small>Student records are not configured yet</small>
+            <strong>{{ $studentCount ?? 0 }}</strong>
+            <small>Active students in authorized scope</small>
         </article>
 
         <article class="stat-card stat-card-blue">
@@ -146,18 +146,20 @@
                 <p class="eyebrow">Finance</p>
                 <h2>Fees overview</h2>
             </div>
-            <span class="module-status">Not configured</span>
+            @if ($user->canViewFinance())
+                <a href="{{ route('invoices.index') }}" class="text-link">Manage finance</a>
+            @endif
         </div>
         <div class="finance-summary">
             <div>
                 <span>Fees collected</span>
-                <strong>{{ $feesCollected ?? '—' }}</strong>
+                <strong style="color: #0f766e;">${{ number_format($feesCollected ?? 0, 2) }}</strong>
             </div>
             <div>
                 <span>Outstanding balances</span>
-                <strong>{{ $outstandingBalance ?? '—' }}</strong>
+                <strong style="color: {{ ($outstandingBalance ?? 0) > 0 ? '#b91c1c' : '#15803d' }};">${{ number_format($outstandingBalance ?? 0, 2) }}</strong>
             </div>
-            <p>Fee collection and student balances will appear here after the finance module is implemented.</p>
+            <p>Real-time revenue collections and unpaid student fee balances across your authorized campus scope.</p>
         </div>
     </section>
 @endsection

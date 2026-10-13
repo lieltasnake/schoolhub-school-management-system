@@ -1,0 +1,62 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class FeeDiscount extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'branch_id',
+        'name',
+        'code',
+        'type',
+        'value',
+        'description',
+        'status',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'branch_id' => 'integer',
+            'value' => 'decimal:2',
+        ];
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('status', 'active');
+    }
+
+    public function scopeSearch(Builder $query, ?string $term): Builder
+    {
+        if (! $term) {
+            return $query;
+        }
+
+        return $query->where(function (Builder $builder) use ($term) {
+            $builder->where('name', 'like', "%{$term}%")
+                ->orWhere('code', 'like', "%{$term}%");
+        });
+    }
+
+    public function calculateDiscount(float $amount): float
+    {
+        if ($this->type === 'percentage') {
+            return round(($amount * (float) $this->value) / 100, 2);
+        }
+
+        return min($amount, (float) $this->value);
+    }
+}

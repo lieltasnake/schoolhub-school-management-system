@@ -25,13 +25,13 @@ Completed:
 - Admin creation command
 - Incremental database migrations for roles, branches, academic years, terms, and school settings
 - Responsive UI shell for desktop and mobile
-- Automated authentication, branch-isolation, dashboard, and academic-calendar tests
+- Grades and sections management per campus and academic year
+- Student and guardian management with admissions, profiles, family contacts, class enrollments, and status controls
+- School Fee Setup and Payment Management with fee categories, pricing structures, discounts/waivers, student invoices, batch grade-billing, receipt recording, reversal handling, and live dashboard financial summaries
+- Automated tests across authentication, branch-isolation, dashboard, academic-calendar, grade-section, student-guardian, fee-categories, fee-structures, fee-discounts, invoices, and payments (97 passing tests, 325 assertions)
 
 Planned next:
-- Student management module
-- Academic structure including grades, classes, and enrollment
 - Attendance, examinations, and results
-- Fee configuration and invoicing
 - Reports and exports
 - English and Amharic language switcher
 

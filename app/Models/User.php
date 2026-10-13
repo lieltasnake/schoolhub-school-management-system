@@ -96,6 +96,48 @@ class User extends Authenticatable
         return $this->hasPermission('manage_users') || $this->hasPermission('manage_branch_users');
     }
 
+    public function canManageStudents(): bool
+    {
+        return $this->hasPermission('manage_students') || $this->hasPermission('manage_branch_students');
+    }
+
+    public function canViewStudents(): bool
+    {
+        return $this->canManageStudents() || $this->hasPermission('view_assigned_students');
+    }
+
+    public function canManageRegistration(): bool
+    {
+        return $this->canManageStudents() || $this->hasPermission('manage_enrollment');
+    }
+
+    public function canManageEnrollment(): bool
+    {
+        return $this->canManageStudents() || $this->hasPermission('manage_enrollment');
+    }
+
+    public function canManageExams(): bool
+    {
+        return $this->canManageStudents() || $this->hasPermission('manage_exams') || $this->hasRole('teacher');
+    }
+
+    public function canEnterGrades(): bool
+    {
+        return $this->canManageExams() || $this->hasRole('teacher');
+    }
+
+    public function canManageFinance(): bool
+    {
+        return $this->hasPermission('manage_finance') || $this->hasPermission('manage_branch_finance');
+    }
+
+    public function canViewFinance(): bool
+    {
+        return $this->canManageFinance()
+            || $this->hasPermission('view_branch_finance')
+            || $this->hasPermission('view_finance');
+    }
+
     public function canAccessBranch(?int $branchId = null): bool
     {
         if ($this->hasPermission('manage_all_branches')) {

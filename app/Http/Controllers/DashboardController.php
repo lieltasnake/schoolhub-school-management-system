@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\AcademicYear;
 use App\Models\Branch;
+use App\Models\Invoice;
+use App\Models\Payment;
 use App\Models\Role;
 use App\Models\SchoolSetting;
+use App\Models\Student;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
@@ -38,21 +41,33 @@ class DashboardController extends Controller
         $academicYearQuery = AcademicYear::query()
             ->with(['terms' => fn (HasMany $query) => $query->where('status', 'active')])
             ->where('status', 'active');
+        $studentQuery = Student::query()->where('status', 'active');
+        $invoiceQuery = Invoice::query()->whereNotIn('status', ['cancelled']);
+        $paymentQuery = Payment::query()->where('status', 'confirmed');
 
         $scopeBranchId = $canViewAllBranches ? $selectedBranchId : $user->branch_id;
         if ($scopeBranchId !== null) {
             $branchQuery->whereKey($scopeBranchId);
             $staffQuery->where('branch_id', $scopeBranchId);
             $academicYearQuery->where('branch_id', $scopeBranchId);
+            $studentQuery->where('branch_id', $scopeBranchId);
+            $invoiceQuery->where('branch_id', $scopeBranchId);
+            $paymentQuery->whereHas('invoice', fn ($q) => $q->where('branch_id', $scopeBranchId));
         } elseif (! $canViewAllBranches) {
             if ($user->branch_id === null) {
                 $branchQuery->whereRaw('1 = 0');
                 $staffQuery->whereRaw('1 = 0');
                 $academicYearQuery->whereRaw('1 = 0');
+                $studentQuery->whereRaw('1 = 0');
+                $invoiceQuery->whereRaw('1 = 0');
+                $paymentQuery->whereRaw('1 = 0');
             } else {
                 $branchQuery->whereKey($user->branch_id);
                 $staffQuery->where('branch_id', $user->branch_id);
                 $academicYearQuery->where('branch_id', $user->branch_id);
+                $studentQuery->where('branch_id', $user->branch_id);
+                $invoiceQuery->where('branch_id', $user->branch_id);
+                $paymentQuery->whereHas('invoice', fn ($q) => $q->where('branch_id', $user->branch_id));
             }
         }
 
@@ -67,15 +82,15 @@ class DashboardController extends Controller
             'accessibleBranches' => $accessibleBranches,
             'selectedBranchId' => $selectedBranchId,
             'schoolSettings' => SchoolSetting::current(),
-            'studentCount' => null,
+            'studentCount' => $studentQuery->count(),
             'activeAcademicYear' => $activeYears->count() === 1
                 ? $activeYears->first()->name
                 : ($activeYears->isNotEmpty() ? 'Varies by campus' : null),
             'activeTerm' => $activeTerms->count() === 1
                 ? $activeTerms->first()->name
                 : ($activeTerms->isNotEmpty() ? 'Varies by campus' : null),
-            'feesCollected' => null,
-            'outstandingBalance' => null,
+            'feesCollected' => (float) $paymentQuery->sum('amount'),
+            'outstandingBalance' => (float) $invoiceQuery->whereIn('status', ['issued', 'partially_paid', 'overdue'])->sum('balance'),
         ]);
     }
 }
