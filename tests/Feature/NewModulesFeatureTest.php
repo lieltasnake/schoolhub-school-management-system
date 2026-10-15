@@ -19,12 +19,12 @@ use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\Timetable;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class NewModulesFeatureTest extends TestCase
 {
-    use DatabaseTransactions;
+    use RefreshDatabase;
 
     protected function setUp(): void
     {

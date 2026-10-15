@@ -4,6 +4,7 @@ use App\Http\Controllers\AcademicYearController;
 use App\Http\Controllers\AssessmentController;
 use App\Http\Controllers\AssessmentTypeController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BookCirculationController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BookTypeController;
@@ -35,6 +36,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentEnrollmentController;
 use App\Http\Controllers\StudentGroupController;
 use App\Http\Controllers\StudentRegistrationController;
+use App\Http\Controllers\StudentTransitionController;
 use App\Http\Controllers\StudentTypeController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherAssignmentController;
@@ -58,6 +60,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     Route::get('/settings/school', [SchoolSettingController::class, 'edit'])->name('settings.school.edit');
     Route::put('/settings/school', [SchoolSettingController::class, 'update'])->name('settings.school.update');
+    Route::get('/settings/backup/download', [BackupController::class, 'download'])->name('settings.backup.download');
+    Route::post('/settings/backup/restore', [BackupController::class, 'restore'])->name('settings.backup.restore');
     Route::resource('roles', RoleController::class)->except(['show']);
     Route::post('/academic-years/{academic_year}/activate', [AcademicYearController::class, 'activate'])->name('academic-years.activate');
     Route::resource('academic-years', AcademicYearController::class)->except(['destroy']);
@@ -65,6 +69,14 @@ Route::middleware('auth')->group(function () {
     Route::resource('terms', TermController::class)->except(['destroy']);
     Route::resource('grades', GradeController::class);
     Route::resource('sections', SectionController::class);
+
+    // School setup: Student transitions (Withdraw, Graduate, Repeat)
+    Route::get('/school-setup/student-transitions', [StudentTransitionController::class, 'index'])->name('student-transitions.index');
+    Route::post('/school-setup/student-transitions/withdraw', [StudentTransitionController::class, 'withdraw'])->name('student-transitions.withdraw');
+    Route::post('/school-setup/student-transitions/readmit', [StudentTransitionController::class, 'readmit'])->name('student-transitions.readmit');
+    Route::post('/school-setup/student-transitions/graduate', [StudentTransitionController::class, 'graduate'])->name('student-transitions.graduate');
+    Route::post('/school-setup/student-transitions/repeat', [StudentTransitionController::class, 'repeat'])->name('student-transitions.repeat');
+    Route::get('/school-setup/student-transitions/students-by-grade', [StudentTransitionController::class, 'studentsByGrade'])->name('student-transitions.students-by-grade');
 
     // 1. Registration
     Route::get('/registrations/promotion', [RegistrationPromotionController::class, 'index'])->name('registrations.promotion');

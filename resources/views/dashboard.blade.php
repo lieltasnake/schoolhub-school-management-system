@@ -133,6 +133,9 @@
                     @if ($user->canManageAcademicCalendar())
                         <a href="{{ route('academic-years.index') }}" class="text-link">Manage academic calendar</a>
                     @endif
+                    @if ($user->canManageStudentTransitions())
+                        <a href="{{ route('student-transitions.index') }}" class="text-link">Student transitions (withdraw, graduate, repeat)</a>
+                    @endif
                 </div>
             @else
                 <p class="setup-note">Your administrator can configure school details and the academic calendar.</p>

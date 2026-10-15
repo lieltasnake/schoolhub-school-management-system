@@ -7,6 +7,7 @@
         @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
             @vite(['resources/css/app.css', 'resources/js/app.js'])
         @endif
+        @stack('styles')
     </head>
     <body class="app-body">
         @php
@@ -38,7 +39,7 @@
                     @endif
 
                     @if ($currentUser && $currentUser->canManageSchoolSettings())
-                        <a href="{{ route('settings.school.edit') }}" class="nav-link {{ request()->routeIs('settings.school.*') ? 'active' : '' }}" @if (request()->routeIs('settings.school.*')) aria-current="page" @endif>
+                        <a href="{{ route('settings.school.edit') }}" class="nav-link {{ request()->routeIs('settings.*') ? 'active' : '' }}" @if (request()->routeIs('settings.*')) aria-current="page" @endif>
                             <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1a1.8 1.8 0 1 1-2.5 2.5l-.1-.1a1.8 1.8 0 0 0-3 .9v.2a1.8 1.8 0 1 1-3.6 0v-.2a1.8 1.8 0 0 0-3-.9l-.1.1a1.8 1.8 0 1 1-2.5-2.5l.1-.1a1.8 1.8 0 0 0-.9-3h-.2a1.8 1.8 0 1 1 0-3.6h.2a1.8 1.8 0 0 0 .9-3l-.1-.1a1.8 1.8 0 1 1 2.5-2.5l.1.1a1.8 1.8 0 0 0 3-.9v-.2a1.8 1.8 0 1 1 3.6 0v.2a1.8 1.8 0 0 0 3 .9l.1-.1a1.8 1.8 0 1 1 2.5 2.5l-.1.1a1.8 1.8 0 0 0 .9 3h.2a1.8 1.8 0 1 1 0 3.6h-.2a1.8 1.8 0 0 0-.9 3Z"/></svg>
                             <span>School Settings</span>
                         </a>
@@ -114,6 +115,10 @@
                             <a href="{{ route('grade-promotions.index') }}" class="nav-link {{ request()->routeIs('grade-promotions.*') ? 'active' : '' }}" @if (request()->routeIs('grade-promotions.*')) aria-current="page" @endif>
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M17 7l-5-5-5 5M5 17l7 5 7-5"/></svg>
                                 <span>Grade Promotion</span>
+                            </a>
+                            <a href="{{ route('student-transitions.index') }}" class="nav-link {{ request()->routeIs('student-transitions.*') ? 'active' : '' }}" @if (request()->routeIs('student-transitions.*')) aria-current="page" @endif>
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+                                <span>Student Transitions</span>
                             </a>
                         @endif
                     @endif
@@ -310,5 +315,6 @@
                 </div>
             </main>
         </div>
+        @stack('scripts')
     </body>
 </html>

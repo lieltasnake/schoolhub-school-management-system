@@ -104,6 +104,11 @@ class Student extends Model
         return $this->hasOne(StudentEnrollment::class)->latestOfMany('enrolled_at');
     }
 
+    public function transitions(): HasMany
+    {
+        return $this->hasMany(StudentTransition::class)->orderByDesc('transition_date');
+    }
+
     public function getFullNameAttribute(): string
     {
         $parts = array_filter([$this->first_name, $this->middle_name, $this->last_name]);

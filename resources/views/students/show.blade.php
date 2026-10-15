@@ -19,6 +19,11 @@
                         {{ $student->status === 'active' ? 'Deactivate student' : 'Activate student' }}
                     </button>
                 </form>
+                @if (auth()->user()?->canManageStudentTransitions())
+                    <a href="{{ route('student-transitions.index', ['tab' => 'withdraw', 'branch_id' => $student->branch_id]) }}" class="secondary-button" style="text-decoration: none;">
+                        Transitions
+                    </a>
+                @endif
             @endcan
         </div>
     </section>

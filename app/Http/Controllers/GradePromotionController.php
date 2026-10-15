@@ -177,6 +177,9 @@ class GradePromotionController extends Controller
                     $enrollment->update(['status' => 'completed']);
                     $student->update(['status' => 'graduated']);
                     $graduatedCount++;
+                } elseif ($item['action'] === 'leave') {
+                    $enrollment->update(['status' => 'completed']);
+                    $student->update(['status' => 'withdrawn']);
                 }
             }
 

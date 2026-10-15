@@ -101,6 +101,11 @@ class User extends Authenticatable
         return $this->hasPermission('manage_students') || $this->hasPermission('manage_branch_students');
     }
 
+    public function canManageStudentTransitions(): bool
+    {
+        return $this->canManageStudents() || $this->canManageAcademicCalendar();
+    }
+
     public function canViewStudents(): bool
     {
         return $this->canManageStudents() || $this->hasPermission('view_assigned_students');
